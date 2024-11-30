@@ -1,6 +1,10 @@
-﻿namespace Api
+﻿namespace Api;
+
+public static class DependencyResolver
 {
-    public class DependencyResolver
+    public static IServiceCollection AddApi(this IServiceCollection services)
     {
+
+        return services;
     }
 }
