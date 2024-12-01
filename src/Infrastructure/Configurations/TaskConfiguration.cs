@@ -18,10 +18,10 @@ public class TaskConfiguration : IEntityTypeConfiguration<Task>
         builder.Ignore(t => t.User);
 
         builder.Property(t => t.CreatedAt)
-               .HasDefaultValueSql("GETUTCDATE()");
+               .HasDefaultValueSql("CURRENT_TIMESTAMP");  
 
         builder.Property(t => t.UpdatedAt)
-               .HasDefaultValueSql("GETUTCDATE()");
+               .HasDefaultValueSql("CURRENT_TIMESTAMP");  
 
         builder.HasOne<AppUser>()
                .WithMany()

@@ -38,6 +38,8 @@ public static class DependencyResolver
                 };
             });
 
+        services.AddAuthorization();
+
         return services;
     }
 }
