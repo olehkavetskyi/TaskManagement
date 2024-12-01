@@ -1,5 +1,6 @@
 ﻿using Domain.Enums;
 using Domain.Interfaces;
+
 using TaskStatus = Domain.Enums.TaskStatus;
 
 namespace Domain.Entities;
@@ -16,8 +17,7 @@ public class Task
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 
     // Foreign key for user
-    public string UserId { get; set; } = string.Empty;
+    public Guid UserId { get; set; }
     // Navigation property using IUser for AppUser
     public IUser User { get; set; } = null!;
-
 }

@@ -19,7 +19,6 @@ public static class DependencyResolver
             options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
         });
 
-
         services.AddIdentityCore<AppUser>()
         .AddRoles<IdentityRole<Guid>>()
         .AddEntityFrameworkStores<TaskManagementContext>()
@@ -38,7 +37,6 @@ public static class DependencyResolver
                     ValidateAudience = false
                 };
             });
-
 
         return services;
     }

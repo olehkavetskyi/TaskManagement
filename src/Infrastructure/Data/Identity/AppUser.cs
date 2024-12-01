@@ -1,5 +1,6 @@
 ﻿using Domain.Interfaces;
 using Microsoft.AspNetCore.Identity;
+using Task = Domain.Entities.Task;
 
 namespace Infrastructure.Data.Identity;
 
