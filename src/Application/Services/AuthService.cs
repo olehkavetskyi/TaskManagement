@@ -1,9 +1,7 @@
 ﻿using Application.DTOs;
 using Application.Interfaces;
 using Infrastructure.Data.Identity;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using System.Security.Claims;
 
 namespace Application.Services;
 
@@ -32,7 +30,9 @@ public class AuthService : IAuthService
 
         var result = await _userManager.CreateAsync(user, dto.Password);
         if (!result.Succeeded)
+        {
             throw new Exception(string.Join("; ", result.Errors.Select(e => e.Description)));
+        }
 
         return _jwtTokenService.GenerateToken(user);
     }

@@ -5,7 +5,7 @@ namespace Application.DTOs;
 public class RegisterUserDto
 {
     [Required]
-    public string User { get; set; } = null!;
+    public string Username { get; set; } = null!;
     [Required]
     [EmailAddress]
     public string Email { get; set; } = null!;

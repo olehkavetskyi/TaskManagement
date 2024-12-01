@@ -1,4 +1,5 @@
-﻿using Infrastructure.Data;
+﻿using Domain.Interfaces;
+using Infrastructure.Data;
 using Infrastructure.Data.Identity;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +19,8 @@ public static class DependencyResolver
         {
             options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
         });
+
+        services.AddScoped<ITaskRepository, ITaskRepository>();
 
         services.AddIdentityCore<AppUser>()
         .AddRoles<IdentityRole<Guid>>()
