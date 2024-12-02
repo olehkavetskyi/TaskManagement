@@ -1,6 +1,8 @@
 ﻿using Infrastructure.Data;
 using Domain.Interfaces;
 using TaskEntity = Domain.Entities.Task;
+using Microsoft.EntityFrameworkCore;
+using Domain.Specifications;
 
 namespace Infrastructure.Repositories;
 
@@ -13,14 +15,26 @@ public class TaskRepository : ITaskRepository
         _context = context;
     }
 
-    public IQueryable<TaskEntity> GetAll()
+    public async Task<TaskEntity?> GetByIdAsync(Guid id)
     {
-        return _context.Tasks.AsQueryable();
+        return await _context.Tasks.FindAsync(id);
     }
 
-    public async Task<TaskEntity> GetByIdAsync(int taskId)
+    public async Task<IEnumerable<TaskEntity>> GetFilteredAsync(
+        Specification<TaskEntity> specification,
+        string? sortBy = null,
+        bool sortDescending = false)
     {
-        return await _context.Tasks.FindAsync(taskId);
+        IQueryable<TaskEntity> query = _context.Tasks.Where(specification.ToExpression());
+
+        if (!string.IsNullOrEmpty(sortBy))
+        {
+            query = sortDescending
+                ? query.OrderByDescending(e => EF.Property<object>(e, sortBy))
+                : query.OrderBy(e => EF.Property<object>(e, sortBy));
+        }
+
+        return await query.ToListAsync();
     }
 
     public async Task AddAsync(TaskEntity task)
