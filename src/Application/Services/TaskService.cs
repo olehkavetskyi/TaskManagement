@@ -56,13 +56,28 @@ public class TaskService : ITaskService
         return _mapper.Map<TaskDto>(task);
     }
 
-    public async Task<IEnumerable<TaskDto>> GetTasksAsync(TaskFilterDto filter, Guid userId)
+    public async Task<PagedResultDto<TaskDto>> GetTasksAsync(TaskFilterDto filter, Guid userId)
     {
         var specification = new TaskSpecification(userId, filter.Title, filter.Status, filter.DueDate);
 
-        var tasks = await _taskRepository.GetFilteredAsync(specification, filter.SortBy, filter.SortDescending);
-        return _mapper.Map<IEnumerable<TaskDto>>(tasks);
+        var skip = (filter.PageNumber - 1) * filter.PageSize;
+        var (tasks, totalCount) = await _taskRepository.GetFilteredAsync(
+            specification,
+            filter.SortBy,
+            filter.SortDescending,
+            skip,
+            filter.PageSize
+        );
+
+        return new PagedResultDto<TaskDto>
+        {
+            Items = _mapper.Map<IEnumerable<TaskDto>>(tasks),
+            TotalCount = totalCount,
+            PageNumber = filter.PageNumber,
+            PageSize = filter.PageSize
+        };
     }
+
 
     // Helper to validate task ownership
     private async Task<TaskEntity> GetTaskByIdAndUserAsync(Guid taskId, Guid userId)

@@ -20,13 +20,19 @@ public class TaskRepository : ITaskRepository
         return await _context.Tasks.FindAsync(id);
     }
 
-    public async Task<IEnumerable<TaskEntity>> GetFilteredAsync(
+    public async Task<(IEnumerable<TaskEntity> tasks, int totalCount)> GetFilteredAsync(
         Specification<TaskEntity> specification,
         string? sortBy = null,
-        bool sortDescending = false)
+        bool sortDescending = false,
+        int skip = 0,
+        int take = int.MaxValue)
     {
         IQueryable<TaskEntity> query = _context.Tasks.Where(specification.ToExpression());
 
+        // Get the total count before applying pagination
+        int totalCount = await query.CountAsync();
+
+        // Apply sorting
         if (!string.IsNullOrEmpty(sortBy))
         {
             query = sortDescending
@@ -34,7 +40,10 @@ public class TaskRepository : ITaskRepository
                 : query.OrderBy(e => EF.Property<object>(e, sortBy));
         }
 
-        return await query.ToListAsync();
+        // Apply pagination
+        var tasks = await query.Skip(skip).Take(take).ToListAsync();
+
+        return (tasks, totalCount);
     }
 
     public async Task AddAsync(TaskEntity task)
