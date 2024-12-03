@@ -1,7 +1,7 @@
 ﻿using Api.Errors;
 using System.Text.Json;
 
-namespace Api.Middleware;
+namespace Api.Middlewares;
 
 public class AuthErrorMiddleware
 {

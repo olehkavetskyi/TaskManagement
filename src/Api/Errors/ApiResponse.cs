@@ -17,9 +17,9 @@ public class ApiResponse
         // those phrases where taken from Sherlock for an ambient experience
         return statusCode switch
         {
-            400 => "Oh, you've fumbled magnificently. A bad request, how utterly ordinary.",
-            401 => "Unauthorized? My, my. Did you truly think you'd slip past unnoticed? How dull.",
-            404 => "Ah, what you seek does not exist—or perhaps it's hiding, just out of reach. Intriguing, isn't it?",
+            400 => "Oh, you have fumbled magnificently. A bad request, how utterly ordinary.",
+            401 => "Unauthorized? My, my. Did you truly think you could slip past unnoticed? How dull.",
+            404 => "Ah, what you seek does not exist—or perhaps it is hiding, just out of reach. Intriguing, is it not?",
             500 => "The machine falters, the gears grind to a halt. Chaos, as always, is the most delightful of companions.",
             _ => null
         };
