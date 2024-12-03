@@ -16,28 +16,14 @@ public class UserController : BaseController
     [HttpPost("register")]
     public async Task<IActionResult> Register([FromBody] RegisterUserDto dto)
     {
-        try
-        {
-            var token = await _authService.RegisterAsync(dto);
-            return Ok(new { Token = token });
-        }
-        catch (Exception ex)
-        {
-            return BadRequest(new { Error = ex.Message });
-        }
+        var token = await _authService.RegisterAsync(dto);
+        return Ok(new { Token = token });
     }
 
     [HttpPost("login")]
     public async Task<IActionResult> Login([FromBody] LoginUserDto dto)
     {
-        try
-        {
-            var token = await _authService.LoginAsync(dto);
-            return Ok(new { Token = token });
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Unauthorized(new { Error = ex.Message });
-        }
+        var token = await _authService.LoginAsync(dto);
+        return Ok(new { Token = token });
     }
 }

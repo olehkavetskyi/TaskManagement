@@ -20,6 +20,7 @@ public class TaskController : BaseController
     public async Task<IActionResult> CreateTask([FromBody] CreateTaskDto dto)
     {
         var userId = GetUserId();
+
         var createdTask = await _taskService.CreateTaskAsync(dto, userId);
         return CreatedAtAction(nameof(GetTaskById), new { id = createdTask.Id }, createdTask);
     }
@@ -28,62 +29,30 @@ public class TaskController : BaseController
     public async Task<IActionResult> GetTaskById(Guid id)
     {
         var userId = GetUserId();
-        try
-        {
-            var task = await _taskService.GetTaskByIdAsync(id, userId);
-            return Ok(task);
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Forbid();
-        }
-        catch (Exception ex)
-        {
-            return NotFound(new { ex.Message });
-        }
+        var task = await _taskService.GetTaskByIdAsync(id, userId);
+        return Ok(task);
     }
 
     [HttpPut("{id:guid}")]
     public async Task<IActionResult> UpdateTask(Guid id, [FromBody] UpdateTaskDto dto)
     {
         var userId = GetUserId();
-
-        try
-        {
-            var updatedTask = await _taskService.UpdateTaskAsync(id, dto, userId);
-            return Ok(updatedTask);
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Forbid();
-        }
-        catch (Exception ex)
-        {
-            return NotFound(new { ex.Message });
-        }
+        var updatedTask = await _taskService.UpdateTaskAsync(id, dto, userId);
+        return Ok(updatedTask);
     }
 
     [HttpDelete("{id:guid}")]
     public async Task<IActionResult> DeleteTask(Guid id)
     {
         var userId = GetUserId();
+        var isDeleted = await _taskService.DeleteTaskAsync(id, userId);
 
-        try
+        if (isDeleted)
         {
-            var isDeleted = await _taskService.DeleteTaskAsync(id, userId);
-            if (isDeleted)
-                return NoContent();
+            return NoContent();
+        }
 
-            return NotFound();
-        }
-        catch (UnauthorizedAccessException ex)
-        {
-            return Forbid();
-        }
-        catch (Exception ex)
-        {
-            return NotFound(new { ex.Message });
-        }
+        return NotFound();
     }
 
     [HttpGet]
