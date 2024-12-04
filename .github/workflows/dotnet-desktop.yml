@@ -1,0 +1,42 @@
+name: .NET Core Desktop
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    strategy:
+      matrix:
+        configuration: [Debug, Release]
+
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: ./TaskManagement.sln
+      Test_Project_1: ./tests/Api.Tests/Api.Tests.csproj
+      Test_Project_2: ./tests/Application.Tests/Application.Tests.csproj
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    - name: Install .NET Core
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Setup MSBuild.exe
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Execute tests for TestProject1
+      run: dotnet test ${{ env.Test_Project_1 }} --configuration ${{ matrix.configuration }}
+
+    - name: Execute tests for TestProject2
+      run: dotnet test ${{ env.Test_Project_2 }} --configuration ${{ matrix.configuration }}
