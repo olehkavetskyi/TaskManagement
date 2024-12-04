@@ -3,6 +3,7 @@ using Application.Interfaces;
 using Infrastructure.Data.Identity;
 using Microsoft.AspNetCore.Identity;
 using Serilog;
+using ILogger = Serilog.ILogger;
 
 namespace Application.Services;
 

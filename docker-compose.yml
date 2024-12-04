@@ -1,0 +1,39 @@
+services:
+  api:
+    build:
+      context: .
+      dockerfile: src/Api/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ConnectionStrings__DefaultConnection: "Host=database;Database=task_management;Username=postgres;Password=7373"
+    depends_on:
+      - database
+      - migrate
+
+  database:
+    image: postgres:17
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 7373
+      POSTGRES_DB: task_management
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  migrate:
+    build:
+      context: .
+      dockerfile: src/Api/Dockerfile
+    depends_on:
+      - database
+    entrypoint: ["dotnet", "ef", "database", "update"]
+    environment:
+      ASPNETCORE_ENVIRONMENT: "Production"
+      ConnectionStrings__DefaultConnection: "Host=database;Database=task_management;Username=postgres;Password=7373"
+
+volumes:
+  postgres_data:
